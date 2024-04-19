@@ -1,0 +1,144 @@
+---
+title: "FinalProject"
+author: "Yuci Zhang"
+date: "2024-04-17"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+```
+
+# Background
+Tuberculosis (TB) is a serious infectious disease, caused by the bacterium Mycobacterium tuberculosis. Notably, it is one of the top causes of death worldwide, affecting the respiratory system. This disease has attracted many people' attention due to its impact on public health and its ability to spread rapidly in the crowd. TB spreads through the air when individuals with active TB cough, speak, or sneeze. It primarily harms the lungs, but it can also affect other parts of the body, including the kidneys, spine, and brain. While the incidence of TB in the U.S. is lower compared to global averages, the disease still plays a significant role in causing deaths among Americans.
+
+The U.S. Centers for Disease Control and Prevention (CDC) actively monitors TB incidence, which is the source of the data for our report. The goal of this report is to analyze the incidence of TB in the U.S. to discover trends and patterns of the disease, including its progression, spread. It aims to enhance public understanding of TB, aiding people to take measures to prevent its transmission.
+
+# Dataset:
+Year: The year TB cases reported.           
+**Tuberculosis Cases:**           
+Number: The total number of TB cases reported in that year.         
+Rate: The incidence rate of TB cases per 100,000 people in the population.       
+Number.1: The percentage change in the number of TB cases from the previous year.        
+Rate.1: The percentage change in the incidence rate of TB cases per 100,000 people from the previous year.           
+**Tuberculosis Deaths:**                  
+Number1: The total number of deaths due to tuberculosis in that year.         
+Rate1: The death rate due to tuberculosis per 100,000 people in the population.      
+Number.2: The percentage change in the number of tuberculosis deaths from the previous year.    Rate.2: The percentage change in the death rate from the previous year.  
+
+# EDA
+```{r readData}
+tb_data <- read.csv("TB_data_usa.csv")
+head(tb_data)
+```
+```{r readStr}
+str(tb_data)
+```
+```{r cleanData}
+library(dplyr)
+tb_data <- tb_data %>%
+  mutate(
+    Year = as.integer(Year),  
+    Number = as.numeric(gsub(",", "", Number)),  # Remove commas 
+    Rate = as.numeric(Rate),  
+    Number.1 = as.numeric(gsub("[^0-9.-]", "", Number.1)),  # Remove non-numeric characters
+    Rate.1 = as.numeric(gsub("[^0-9.-]", "", Rate.1)), 
+    Number1 = as.numeric(gsub(",", "", Number1)),  
+    Rate1 = as.numeric(gsub("[^0-9.]", "", Rate1)),  
+    Number.2 = as.numeric(gsub("[^0-9.-]", "", Number.2)),  
+    Rate.2 = as.numeric(gsub("[^0-9.-]", "", Rate.2))  
+  )
+str(tb_data)
+```
+```{r BasicStatistics}
+summary(tb_data)
+```
+
+```{r}
+library(ggplot2)
+# Plot for number of TB cases and deaths
+ggplot(tb_data, aes(x = Year)) +
+  geom_line(aes(y = Number, colour = "TB Cases"), size = 1) +
+  geom_point(aes(y = Number, colour = "TB Cases")) +
+  geom_line(aes(y = Number1, colour = "TB Deaths"), size = 1) +
+  geom_point(aes(y = Number1, colour = "TB Deaths")) +
+  scale_color_manual(values = c("TB Cases" = "blue", "TB Deaths" = "red")) +
+  theme_minimal() +
+  labs(title = "TB Cases and Deaths over Years",
+       x = "Year",
+       y = "Number",
+       caption = "Data: TB_data_usa.csv") +
+  theme(plot.title = element_text(hjust = 0.5),
+        legend.title = element_blank()) 
+```
+
+TB cases(Blue Line):       
+- From 1953 to the 1980s, there was a sharp decline in TB cases, indicating that control over the disease improved over the years.       
+- After the 1980s, the decline in TB cases slowed down, and the trend line showed minor peaks and troughs.     
+- Toward the end of 2020, the number of TB cases did not decrease to zero, indicating that TB still remains a concern.     
+
+TB deaths(Red Line):      
+- The general trend in TB deaths is declining.       
+- The reduction in deaths appears to be proportional to the decrease in TB incidence. This proportionality suggests a consistent death ratio over time, which may indicate the effectiveness in treatments.      
+
+```{r}
+# plot for Incidence Rate of TB and Death Rate
+ggplot(tb_data, aes(x = Year)) +
+  geom_line(aes(y = Rate, colour = "Incidence Rate"), size = 1) +
+  geom_point(aes(y = Rate, colour = "Incidence Rate")) +
+  geom_line(aes(y = Rate1, colour = "Death Rate"), size = 1) +
+  geom_point(aes(y = Rate1, colour = "Death Rate")) +
+  scale_color_manual(values = c("Incidence Rate" = "blue", "Death Rate" = "red")) +
+  theme_minimal() +
+  labs(title = "TB Incidence and Death Rates per 100,000 People",
+       x = "Year",
+       y = "Rate",
+       caption = "Data: TB_data_usa.csv") +
+  theme(plot.title = element_text(hjust = 0.5),
+        legend.title = element_blank())
+```
+
+- Both the incidence and death rates of TB decline steadily.
+- The red line(death rate) closely follows the trend of the blue line(incidence rate) at a lower scale. Similar to the plot for number of TB cases and deaths, this may suggest that as fewer people get TB, fewer people die from it.
+
+```{r}
+# Plot for percentage changes in Number and Rate
+ggplot(tb_data, aes(x = Year)) +
+  geom_line(aes(y = Number.1, colour = "Number Change"), na.rm = TRUE) +
+  geom_line(aes(y = Rate.1, colour = "Rate Change"), na.rm = TRUE) +
+  geom_point(aes(y = Number.1, colour = "Number Change"), na.rm = TRUE) +
+  geom_point(aes(y = Rate.1, colour = "Rate Change"), na.rm = TRUE) +
+  scale_color_manual(values = c("Number Change" = "red", "Rate Change" = "green")) +
+  theme_minimal() +
+  labs(title = "Percentage Change in TB Cases and Rates",
+       x = "Year",
+       y = "Percentage Change",
+       color = "Legend",
+       caption = "Data: TB_data_usa.csv") +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+- The red line (number change) and the green line (rate change) follow a similar pattern, suggesting that changes in the number of TB cases are closely related to changes in the TB rate.
+- Most percentage changes are between -10% and +10%, indicating there were not very drastic year-over-year changes.
+- There is a large drop in both the number change and rate change around the year 2020, where rate change drops just below -20%. It is possibly due to the impact of the COVID-19.
+
+```{r}
+# Plot for percentage changes in Deaths number and Death Rate
+ggplot(tb_data, aes(x = Year)) +
+  geom_line(aes(y = Number.2, colour = "Deaths Change"), na.rm = TRUE) +
+  geom_line(aes(y = Rate.2, colour = "Death Rate Change"), na.rm = TRUE) +
+  geom_point(aes(y = Number.2, colour = "Deaths Change"), na.rm = TRUE) +
+  geom_point(aes(y = Rate.2, colour = "Death Rate Change"), na.rm = TRUE) +
+  scale_color_manual(values = c("Deaths Change" = "red", "Death Rate Change" = "green")) +
+  theme_minimal() +
+  labs(title = "Percentage Change in TB Deaths number and Death Rates",
+       x = "Year",
+       y = "Percentage Change",
+       color = "Legend",
+       caption = "Data: TB_data_usa.csv") +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+- The percentage change ranges from about -30% to +10%.        
+- Both deaths change (red line) and death rate change (green line) show significant year-to-year variability.     
