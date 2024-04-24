@@ -11,9 +11,9 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 ```
 
 # Background
-Tuberculosis (TB) is a serious infectious disease, caused by the bacterium Mycobacterium tuberculosis. Notably, it is one of the top causes of death worldwide, affecting the respiratory system. This disease has attracted many people' attention due to its impact on public health and its ability to spread rapidly in the crowd. TB spreads through the air when individuals with active TB cough, speak, or sneeze. It primarily harms the lungs, but it can also affect other parts of the body, including the kidneys, spine, and brain. While the incidence of TB in the U.S. is lower compared to global averages, the disease still plays a significant role in causing deaths among Americans.
+Tuberculosis (TB) is a serious infectious disease, caused by the bacterium Mycobacterium tuberculosis. Notably, it is one of the top causes of death worldwide, affecting the respiratory system.[^1] This disease has attracted many people' attention due to its impact on public health and its ability to spread rapidly in the crowd. TB spreads through the air when individuals with active TB cough, speak, or sneeze. It primarily harms the lungs, but it can also affect other parts of the body, including the kidneys, spine, and brain.[^2] While the incidence of TB in the U.S. is lower compared to global averages, the disease still plays a significant role in causing deaths among Americans.
 
-The U.S. Centers for Disease Control and Prevention (CDC) actively monitors TB incidence, which is the source of the data for our report. The goal of this report is to analyze the incidence of TB in the U.S. to discover trends and patterns of the disease, including its progression, spread. It aims to enhance public understanding of TB, aiding people to take measures to prevent its transmission.
+The U.S. Centers for Disease Control and Prevention (CDC) actively monitors TB incidence, which is the source of the data for our report.[^3] The goal of this report is to analyze the incidence of TB in the U.S. to discover trends and patterns of the disease, including its progression, spread. It aims to enhance public understanding of TB, aiding people to take measures to prevent its transmission.
 
 # Dataset:
 Year: The year TB cases reported.           
@@ -142,3 +142,8 @@ ggplot(tb_data, aes(x = Year)) +
 
 - The percentage change ranges from about -30% to +10%.        
 - Both deaths change (red line) and death rate change (green line) show significant year-to-year variability.     
+
+## Reference
+[^1]: Explanation of Tuberculosis is learned from WHO
+[^2]: Explanation of Tuberculosis is learned from WHO
+[^3]: The dataset we got from https://www.cdc.gov/tb/statistics/reports/2020/table1.htm
